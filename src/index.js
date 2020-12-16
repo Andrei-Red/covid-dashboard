@@ -1,5 +1,4 @@
-import {  } from './js/create-main-html.js';
-
+import startCreteHTML from './js/create-main-html.js';
 
 // RUN
-
+startCreteHTML();
