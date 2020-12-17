@@ -1,0 +1,14 @@
+.map-content-wrapper {
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+
+    background-color: black;
+}
+
+@media (max-width: 800px) {
+    .map-content-wrapper {
+        width: 94%;
+        margin: 2% auto;
+    }
+}
