@@ -7,19 +7,20 @@ export default class List {
     }
 
     loadInfo() {
-        fetch(this.url)
+        fetch('./js/country-list/covid.json')
             .then((response) => response.json())
-            .then((json) => this.showInfo(json));
+            // eslint-disable-next-line no-return-assign
+            .then((json) => this.data = json.Countries);
+        this.loadFlags();
     }
 
     loadFlags() {
         fetch(this.urlFlag)
             .then((response) => response.json())
-            .then((json) => console.log(json));
+            .then((json) => this.showInfo(json));
     }
 
-    showInfo(json) {
-        this.data = json.Countries;
+    showInfo(flags) {
         const dataToShow = this.data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed).reverse();
         dataToShow.forEach(data => {
             const listItem = document.createElement('div');
@@ -32,12 +33,22 @@ export default class List {
             const country = document.createElement('span');
             country.classList.add('country');
             country.innerText = data.Country;
+            const imageWrapper = document.createElement('div');
+            const flag = flags.find((item) => item.name === data.Country);
+            if (flag) {
+                const image = document.createElement('img');
+
+                imageWrapper.classList.add('country-flag');
+                image.onload = () => imageWrapper.appendChild(image);
+                image.src = flag.flag;
+            }
 
             listItem.appendChild(number);
             listItem.appendChild(country);
+            listItem.appendChild(imageWrapper)
             this.list.appendChild(listItem);
         });
-        this.loadFlags();
+
     }
 
 
