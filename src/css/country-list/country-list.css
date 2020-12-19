@@ -5,10 +5,19 @@
   padding: 5px;
   overflow-y: auto;
 }
+.control-panel input {
+  padding: 2px;
+  width: 75%;
+  border: none;
+}
+input:focus {
+  outline: none;
+}
 
 .list-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 5px;
   user-select: none;
   cursor: pointer;
