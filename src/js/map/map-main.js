@@ -1,12 +1,11 @@
 import {createHTML} from '../create-main-html.js';
-//import {covidDataJSON} from '../../index.js';
-
-//console.log(covidDataJSON)
 
 const URL_API = 'https://corona.lmao.ninja/v2/countries';
 const MAP_SKIN = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
 
 const createMap = {
+    arrMark: [],
+
     createDivElementForMapAndAddMap() {
         const idMapWrapper = "map"
         const mapContentElement = createHTML.getHTMLElementByQuerySelector('.map-content')
@@ -21,6 +20,12 @@ const createMap = {
         createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn2')
         createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn3')
 
+        const buttonOne = document.getElementById('btn1')
+        buttonOne.innerHTML = `<p>Active</p>`
+        const buttonTwo = document.getElementById('btn2')
+        buttonTwo.innerHTML = `<p>Recovere</p>`
+        const buttonThree = document.getElementById('btn3')
+        buttonThree.innerHTML = `<p>Deaths</p>`
     },
 
     addMapInHtmlElement(idHtmlElement) {
@@ -40,110 +45,99 @@ const createMap = {
 
         map.addLayer(CartoDB_DarkMatterNoLabels)
 
-        this.getApi(map)
+        this.getApiAndChangeMarkerMap(map)
         
         const btn1 = document.getElementById('btn1')
         const btn2 = document.getElementById('btn2')
         const btn3 = document.getElementById('btn3')
 
         btn1.addEventListener('click', () => {
-            console.log(1)
-
-            this.getApi(map, 1)
+            this.getApiAndChangeMarkerMap(map, 1)
         })
 
         btn2.addEventListener('click', () => {
-            console.log(2)
-            this.getApi(map, 2)
+            this.getApiAndChangeMarkerMap(map, 2)
         })
 
         btn3.addEventListener('click', () => {
-            console.log(3)
-            this.getApi(map, 3)
+            this.getApiAndChangeMarkerMap(map, 3)
         })
     },
 
-    arrMark: [],
-
-    getApi(map, btn = 1) {
+    getApiAndChangeMarkerMap(map, btn = 1) {
 
         fetch(URL_API).then(function(response) {
             if(response.ok) {
-                response.json().then(function(dataApi) {
-                    const data = dataApi;
-                    createMarker(data, btn)
-                });
+                response.json().then(function(data) {
+                    createMap.createMarker(data, btn, map);
+                    return data;
+                }).then(data => {
+                    createMap.clearOldMarker(),
+                    createMap.createMarker(data, btn, map)
+                })
             } else {
                 console.log("Response status" + response.status + ': ' + response.statusText);
             }
-        });
+        })
+    },
 
+    createMarker(data, btn, map) {
 
-        
-        const clearOldMarker = () => {
-            this.arrMark.forEach((e) => {
-                e.remove()
-            })
-            this.arrMark = []
-        }
-        clearOldMarker()
+        data.forEach(element => {
 
+             const settingsMarker = {
+                "weight": 1,
+            }
 
-        const createMarker = (data, btn) => {
-            console.log(data)
-
-            data.forEach(element => {
-
-                 const settingsMarker = {
-                    "weight": 1,
-                }
-
-                const nameCountry = element.country;
-                const latCountry = element.countryInfo.lat;
-                const longCountry = element.countryInfo.long;
-                    
-                let dataInfo = null;
+            const nameCountry = element.country;
+            const latCountry = element.countryInfo.lat;
+            const longCountry = element.countryInfo.long;
                 
-                if (btn === 1) {
-                    dataInfo = element.active;
-                    settingsMarker.color = "red";
-                    settingsMarker.radius = element.activePerOneMillion / 5000;
+            let dataInfo = null;
+            const FOR_SCALE = 5000;
+            const FOR_SCALE_TWO = 200;
 
-                    const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`).bindTooltip("my tooltip text").openTooltip();
-                    this.arrMark.push(marker);
+            if (btn === 1) {
+                dataInfo = element.active;
+                settingsMarker.color = "red";
+                settingsMarker.radius = element.activePerOneMillion / FOR_SCALE;
 
+                const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`).bindTooltip("my tooltip text").openTooltip();
+                this.arrMark.push(marker);
 
-                } else if (btn === 2) {
-                    dataInfo = element.recovered;
-                    settingsMarker.color = "green";
-                    settingsMarker.radius = element.recoveredPerOneMillion / 5000;
+            } else if (btn === 2) {
+                dataInfo = element.recovered;
+                settingsMarker.color = "green";
+                settingsMarker.radius = element.recoveredPerOneMillion / FOR_SCALE;
 
-                    const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`);
-                    this.arrMark.push(marker);
+                const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`);
+                this.arrMark.push(marker);
 
-                } else if (btn === 3) {
-                    settingsMarker.color = "grey";
-                    dataInfo = element.deaths;
-                    settingsMarker.radius = element.deathsPerOneMillion / 200;
+            } else if (btn === 3) {
+                settingsMarker.color = "grey";
+                dataInfo = element.deaths;
+                settingsMarker.radius = element.deathsPerOneMillion / FOR_SCALE_TWO;
 
-                    const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`);
-                    this.arrMark.push(marker);
-                }
-            })
+                const marker = L.circleMarker([latCountry, longCountry], settingsMarker).bindPopup(`${nameCountry}`);
+                this.arrMark.push(marker);
+            }
+        })
 
-            this.arrMark.forEach((e) => {
-                e.addTo(map);
-            })
-        }
-    }, 
+        this.arrMark.forEach((element) => {
+            element.addTo(map);
+        })
+    },
+    
+    clearOldMarker() {
+        this.arrMark.forEach((e) => {
+            e.remove()
+        })
+        this.arrMark = []
+    }
 }
-
-
 
 
 export default function createMapInApp() {
     createMap.createButtonForMap();
     createMap.createDivElementForMapAndAddMap();
-    
-    createMap.controlButtonClick()
 }
