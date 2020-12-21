@@ -45,7 +45,104 @@ const createMap = {
 
         map.addLayer(CartoDB_DarkMatterNoLabels)
 
-        this.getApiAndChangeMarkerMap(map)
+
+//////////////////////////////////////////////////////////////////////////////////
+        
+
+        /// example  https://leafletjs.com/examples/choropleth/
+
+        let geojson;
+
+        fetch("https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_map_subunits.geojson")
+            .then(function(response) {
+            return response.json();
+            }).then(function(json) {
+                //L.geoJSON(json, settings).addTo(map);
+
+                function style(feature) {
+                    return {
+                        fillColor: 'red', //getColor(feature.properties.density),
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.7
+                    };
+                }
+        
+                L.geoJson(json, {style: style}).addTo(map);
+
+                function highlightFeature(e) {
+                    var layer = e.target;
+                
+                    layer.setStyle({
+                        weight: 5,
+                        color: '#666',
+                        dashArray: '',
+                        fillOpacity: 0.7
+                    });
+                
+                    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                        layer.bringToFront();
+                    }
+
+                    info.update(layer);
+                }
+
+                function resetHighlight(e) {
+                    geojson.resetStyle(e.target);
+                    info.update();
+                }
+
+                function zoomToFeature(e) {
+                    map.fitBounds(e.target.getBounds());
+                }
+
+                function onEachFeature(feature, layer) {
+                    layer.on({
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight,
+                        click: zoomToFeature
+                    });
+                }
+
+                geojson = L.geoJson(json, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                }).addTo(map);
+
+
+                // conrol + ifo
+                var info = L.control();
+
+                info.onAdd = function (map) {
+                    console.log('information')
+                    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                    this.update();
+                    return this._div;
+                };
+
+                // method that we will use to update the control based on feature properties passed
+                info.update = function (props) {
+                    console.log('information')
+                    this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
+                        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+                        : 'Hover over a state');
+                };
+
+                info.addTo(map);
+
+            });
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+        /* this.getApiAndChangeMarkerMap(map)
         
         const btn1 = document.getElementById('btn1')
         const btn2 = document.getElementById('btn2')
@@ -61,7 +158,7 @@ const createMap = {
 
         btn3.addEventListener('click', () => {
             this.getApiAndChangeMarkerMap(map, 3)
-        })
+        }) */
     },
 
     getApiAndChangeMarkerMap(map, btn = 1) {
