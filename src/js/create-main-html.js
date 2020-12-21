@@ -1,6 +1,6 @@
 const nameApplication = 'COVID-19 Dashboard';
 
-const createHTML = {
+export const createHTML = {
 
   createHeaderHtml() {
     const createHeader = () => {
