@@ -7,3 +7,4 @@ startCreteHTML();
 createMapInApp();
 const list = new List();
 list.loadInfo();
+

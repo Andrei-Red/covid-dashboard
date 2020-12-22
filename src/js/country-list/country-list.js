@@ -1,3 +1,6 @@
+
+import Keyboard from './keyboard.js';
+
 export default class List {
     constructor() {
         this.list = document.querySelector('.list-content');
@@ -37,18 +40,20 @@ export default class List {
         this.controlPanel.classList.add('control-panel');
         this.dataPanel = document.createElement('div');
         const searchField = document.createElement('input');
+        searchField.classList.add('use-keyboard-input')
         searchField.type = 'text';
         searchField.placeholder = 'input country'
         this.controlPanel.appendChild(searchField);
         searchField.oninput = () => {
+            console.log(searchField.value);
             this.searchInfo(searchField.value);
             this.sortInfo();
             this.showInfo();
         };
-
         this.list.append(this.controlPanel, this.dataPanel);
+        console.log(document.querySelector('use-keyboard-input'));
+        Keyboard.start();
     }
-
 
     showInfo() {
         this.dataPanel.innerHTML = '';

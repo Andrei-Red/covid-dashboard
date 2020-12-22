@@ -5,9 +5,27 @@
   padding: 5px;
   overflow-y: auto;
 }
-.control-panel input {
+
+.control-panel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+.control-panel img {
+  width: 25px;
+  background-color: white;
+  border-radius: 30%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-panel img:hover {
+  background-color: tomato;
+}
+.control-panel input[type="text"] {
   padding: 2px;
-  width: 75%;
+  width: 50%;
   border: none;
 }
 input:focus {
