@@ -1,10 +1,12 @@
 import {createHTML} from '../create-main-html.js';
 
 const URL_API = 'https://corona.lmao.ninja/v2/countries';
-const MAP_SKIN = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+//const MAP_SKIN = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+const MAP_SKIN = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const createMap = {
     arrMark: [],
+    btn: 1,
 
     createDivElementForMapAndAddMap() {
         const idMapWrapper = "map"
@@ -37,47 +39,31 @@ const createMap = {
         const map = new L.map(idHtmlElement, mapOptions)
 
         const CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            //subdomains: 'abcd',
-            //maxZoom: 5,
-            //minZoom: 1
+            maxZoom: 4,
+            minZoom: 1
         });
 
         map.addLayer(CartoDB_DarkMatterNoLabels)
 
- /////////////////////////////////////////////////////
-        
-        
-
-
-
-
-
-
-
-
-
-
- /////////////////////////////////////////////////////       
-
-         
-
-       this.getApiAndChangeMarkerMap(map)
+        this.getApiAndChangeMarkerMap(map)
         
         const btn1 = document.getElementById('btn1')
         const btn2 = document.getElementById('btn2')
         const btn3 = document.getElementById('btn3')
 
         btn1.addEventListener('click', () => {
-            this.getApiAndChangeMarkerMap(map, 1)
+            this.btn = 1;
+            this.getApiAndChangeMarkerMap(map, 1);
         })
 
         btn2.addEventListener('click', () => {
-            this.getApiAndChangeMarkerMap(map, 2)
+            this.btn = 2;
+            this.getApiAndChangeMarkerMap(map, 2);
         })
 
         btn3.addEventListener('click', () => {
-            this.getApiAndChangeMarkerMap(map, 3)
+            this.btn = 3;
+            this.getApiAndChangeMarkerMap(map, 3);
         }) 
     },
 
@@ -92,7 +78,7 @@ const createMap = {
                     createMap.clearOldMarker(map),
                     createMap.createMarker(data, btn, map)
                     
-                    createMap.hoverCountry(map, data)
+                    createMap.hoverCountry(data, map)
                 })
             } else {
                 console.log("Response status" + response.status + ': ' + response.statusText);
@@ -113,8 +99,8 @@ const createMap = {
             const longCountry = element.countryInfo.long;
                 
             let dataInfo = null;
-            const FOR_SCALE = 5000;
-            const FOR_SCALE_TWO = 200;
+            const FOR_SCALE = 3000;
+            const FOR_SCALE_TWO = 100;
 
             if (btn === 1) {
                 dataInfo = element.active;
@@ -133,7 +119,7 @@ const createMap = {
                 this.arrMark.push(marker);
 
             } else if (btn === 3) {
-                settingsMarker.color = "grey";
+                settingsMarker.color = "black";
                 dataInfo = element.deaths;
                 settingsMarker.radius = element.deathsPerOneMillion / FOR_SCALE_TWO;
 
@@ -147,7 +133,7 @@ const createMap = {
         })
     },
 
-    hoverCountry(map, data) {
+    hoverCountry(data, map) {
         isHoverCountry()
 
         function isHoverCountry () {
@@ -177,10 +163,6 @@ const createMap = {
                 .then(function(response) {
                 return response.json();
                 }).then(function(json) {
-                    //L.geoJSON(json, settings).addTo(map);
-    
-                    
-                    //L.geoJson(json, settings).addTo(map);
     
                     function highlightFeature(e) {
                         var layer = e.target;
@@ -188,13 +170,10 @@ const createMap = {
                         layer.setStyle({
                             weight: 4,
                             color: 'grey',
-                            fillOpacity: 0.5
+                            fillOpacity: 0.6
                         });
                     
-                        /* if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                            layer.bringToFront();
-                        } */
-                        info.update('f');
+                        info.update(e, data);
                     }
     
                     function resetHighlight(e) {
@@ -205,7 +184,6 @@ const createMap = {
                     function zoomToFeature(e) {
                         map.fitBounds(e.target.getBounds());
                     }
-    
     
                     function onEachFeature(feature, layer) {
                         layer.on({
@@ -220,23 +198,73 @@ const createMap = {
                         onEachFeature: onEachFeature
                     }).addTo(map);
     
-                    //////////////// INFO
+
                     var info = L.control();
     
                     info.onAdd = function (map) {
-                        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                        this._div = L.DomUtil.create('div', 'info');
                         this.update();
                         return this._div;
                     };
                     
-                    // method that we will use to update the control based on feature properties passed
-                    info.update = function (props) {
-                        this._div.innerHTML = '<h4>Statistic</h4>' +  (props ?
-                            '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-                            : 'Hover over a state');
+                    info.update = function (e, data) {
+                        let country;
+                        let dataCountryObject;
+                        let countryContent; 
+                        let significativeCountryContent;
+                 
+                        if (e) {
+                            country = getCountryOfMouseEvent(e);
+                            dataCountryObject = getDataCountryObject(data, country);
+                            countryContent = getCountryContent(dataCountryObject);
+                            significativeCountryContent = Object.keys(countryContent)[0];
+                        }
+
+                        this._div.innerHTML = '<h4>Statistic</h4>' +  (e ?
+                            `'<b>'${country}'</b>'<br/>Significative ${significativeCountryContent} <br/> ${countryContent[significativeCountryContent]}` 
+                            : 'Hover over a country');
                     };
                     
                     info.addTo(map);
+
+
+                    function getCountryOfMouseEvent(e) {
+                        try {
+                            const country = e.target.feature.properties.ADMIN;
+                            return country;
+                        } catch {
+                            return 'Country not available';
+                        } 
+                    }
+
+                    function getDataCountryObject(data, country) {
+                        let dataCountryObject = null;
+                        data.forEach((element) => {
+                            if (element.country === country) {
+                                dataCountryObject = element;
+                            }
+                        }) 
+                        return dataCountryObject;
+                    }
+
+                    function getCountryContent(dataCountryObject) {
+                        const btnNow = createMap.btn;
+                        try {
+                            switch(btnNow) {
+                            
+                                case 1:
+                                    return {'Active per one million': dataCountryObject.activePerOneMillion};
+                                case 2:
+                                    return {'Recovered per one million': dataCountryObject.recoveredPerOneMillion}; 
+                                case 3:
+                                    return {'Deaths per one million': dataCountryObject.deathsPerOneMillion};      
+                            }
+                        } catch {
+                            return {'Data not available': ''}
+                        }      
+                    }
+
+                    createMap.createMapLegend(map)
                 }); 
         }
 
@@ -247,6 +275,30 @@ const createMap = {
             map.removeLayer(element)
         })
         this.arrMark = []
+    },
+
+    createMapLegend(map) {
+        const legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+        
+            const div = L.DomUtil.create('div', 'info legend');
+            const grades = ['red', 'green', 'black'];
+            const value = ['Active per one million', 'Recovered per one million', 'Deaths per one million']
+            
+        
+            for (let i = 0; i < grades.length; i += 1) {
+                div.innerHTML += 
+                    `<div>
+                        <i style="background:${grades[i]}"></i><br>
+                        <p>${value[i]}</p>
+                    </div> `;
+            }
+        
+            return div;
+        };
+        
+        legend.addTo(map);
     }
 }
 
