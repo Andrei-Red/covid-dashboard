@@ -5,6 +5,7 @@
   padding: 5px;
   overflow-y: auto;
   background-color: black;
+  transition: all 0.2s;
 }
 .list-content-full {
   position: absolute;
@@ -12,6 +13,9 @@
   z-index: 100000;
   width: 1200px;
   overflow-y: auto;
+}
+select {
+  appearance: none;
 }
 
 .control-panel {
@@ -24,17 +28,13 @@
 }
 .control-panel img {
   width: 20px;
-  background-color: white;
   cursor: pointer;
   transition: all 0.2s;
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: -4px;
+  right: -4px;
 }
 
-.control-panel img:hover {
-  background-color: tomato;
-}
 .control-panel input[type="text"] {
   padding: 2px;
   width: 70%;
@@ -42,6 +42,8 @@
 }
 input:focus {
   outline: none;
+  border: none;
+  border-bottom: 1px solid #e74c3c;
 }
 
 .list-item {
@@ -53,9 +55,7 @@ input:focus {
   cursor: pointer;
   transition: all 0.2s;
   font-family: "Noto Sans JP", sans-serif;
-}
-.list-item:hover {
-  background-color: rgba(140, 11, 41, 0.6);
+  color: black;
 }
 
 .number {

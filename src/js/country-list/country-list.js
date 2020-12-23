@@ -128,8 +128,5 @@ export default class List {
             listItem.append(number, country, imageWrapper);
             this.dataPanel.appendChild(listItem);
         });
-
     }
-
-
 }
