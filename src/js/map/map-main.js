@@ -1,7 +1,6 @@
 import {createHTML} from '../create-main-html.js';
 
 const URL_API = 'https://corona.lmao.ninja/v2/countries';
-//const MAP_SKIN = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
 const MAP_SKIN = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const createMap = {
@@ -17,17 +16,17 @@ const createMap = {
     },
 
     createButtonForMap() {
-        const mapContentElement = createHTML.getHTMLElementByQuerySelector('.map-content')
-        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn1')
-        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn2')
-        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn3')
+        const mapContentElement = createHTML.getHTMLElementByQuerySelector('.map-content');
+        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn1');
+        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn2');
+        createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn3');
 
-        const buttonOne = document.getElementById('btn1')
-        buttonOne.innerHTML = `<p>Active</p>`
-        const buttonTwo = document.getElementById('btn2')
-        buttonTwo.innerHTML = `<p>Recovere</p>`
-        const buttonThree = document.getElementById('btn3')
-        buttonThree.innerHTML = `<p>Deaths</p>`
+        const buttonOne = document.getElementById('btn1');
+        buttonOne.innerHTML = `<p>Active</p>`;
+        const buttonTwo = document.getElementById('btn2');
+        buttonTwo.innerHTML = `<p>Recovere</p>`;
+        const buttonThree = document.getElementById('btn3');
+        buttonThree.innerHTML = `<p>Deaths</p>`;
     },
 
     addMapInHtmlElement(idHtmlElement) {
@@ -36,20 +35,24 @@ const createMap = {
             zoom: 3,
         }
 
-        const map = new L.map(idHtmlElement, mapOptions)
+        const map = new L.map(idHtmlElement, mapOptions);
 
-        const CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const mainMapLayer = L.tileLayer(MAP_SKIN, {
             maxZoom: 4,
-            minZoom: 1
+            minZoom: 1,
+            noWrap: true
+
         });
 
-        map.addLayer(CartoDB_DarkMatterNoLabels)
-
-        this.getApiAndChangeMarkerMap(map)
+        map.addLayer(mainMapLayer);
         
-        const btn1 = document.getElementById('btn1')
-        const btn2 = document.getElementById('btn2')
-        const btn3 = document.getElementById('btn3')
+        this.addStyleToMap(map)
+        this.getApiAndChangeMarkerMap(map);
+        
+        
+        const btn1 = document.getElementById('btn1');
+        const btn2 = document.getElementById('btn2');
+        const btn3 = document.getElementById('btn3');
 
         btn1.addEventListener('click', () => {
             this.btn = 1;
@@ -75,13 +78,13 @@ const createMap = {
                     createMap.createMarker(data, btn, map);
                     return data;
                 }).then(data => {
-                    createMap.clearOldMarker(map),
-                    createMap.createMarker(data, btn, map)
-                    
-                    createMap.hoverCountry(data, map)
+                    createMap.clearOldMarker(map);
+                    createMap.createMarker(data, btn, map);
+                    createMap.hoverCountry(data, map);
                 })
             } else {
                 console.log("Response status" + response.status + ': ' + response.statusText);
+                return;
             }
         })
     },
@@ -134,16 +137,14 @@ const createMap = {
     },
 
     hoverCountry(data, map) {
-        isHoverCountry()
+        isHoverCountry();
 
         function isHoverCountry () {
-            const infoElement = document.querySelector('.info')
+            const infoElement = document.querySelector('.info');
             if (infoElement) {
-                console.log('exoit')
                 return
             } else {
-                console.log('create')
-                createHoverCountry()
+                createHoverCountry();
             }
         }
 
@@ -165,7 +166,7 @@ const createMap = {
                 }).then(function(json) {
     
                     function highlightFeature(e) {
-                        var layer = e.target;
+                        const layer = e.target;
                     
                         layer.setStyle({
                             weight: 4,
@@ -199,7 +200,7 @@ const createMap = {
                     }).addTo(map);
     
 
-                    var info = L.control();
+                    const info = L.control();
     
                     info.onAdd = function (map) {
                         this._div = L.DomUtil.create('div', 'info');
@@ -264,7 +265,7 @@ const createMap = {
                         }      
                     }
 
-                    createMap.createMapLegend(map)
+                    createMap.createMapLegend(map);
                 }); 
         }
 
@@ -272,9 +273,9 @@ const createMap = {
     
     clearOldMarker(map) {
         this.arrMark.forEach((element) => {
-            map.removeLayer(element)
+            map.removeLayer(element);
         })
-        this.arrMark = []
+        this.arrMark = [];
     },
 
     createMapLegend(map) {
@@ -284,13 +285,13 @@ const createMap = {
         
             const div = L.DomUtil.create('div', 'info legend');
             const grades = ['red', 'green', 'black'];
-            const value = ['Active per one million', 'Recovered per one million', 'Deaths per one million']
+            const value = ['Active per one million', 'Recovered per one million', 'Deaths per one million'];
             
         
             for (let i = 0; i < grades.length; i += 1) {
                 div.innerHTML += 
                     `<div>
-                        <i style="background:${grades[i]}"></i><br>
+                        <i style="background:${grades[i]}"></i>
                         <p>${value[i]}</p>
                     </div> `;
             }
@@ -299,6 +300,29 @@ const createMap = {
         };
         
         legend.addTo(map);
+    },
+
+    addStyleToMap(map) {
+        fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_ocean.geojson').then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data) {
+                    console.log(data)
+                    L.geoJson(data, {
+                        style: function (feature) {
+                            return {
+                                'weight': 0.1,
+                                'color': 'black',
+                                'fillColor': '#000000',
+                                'fillOpacity': 0.8,
+                            }
+                        }
+                    }).addTo(map);
+                   
+                })
+            } else {
+                console.log("Response status" + response.status + ': ' + response.statusText);
+            }
+        })
     }
 }
 
