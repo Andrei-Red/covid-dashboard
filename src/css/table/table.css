@@ -1,0 +1,83 @@
+
+h3 {
+    color: red;
+    font-size: 15px;
+    font-weight: 700;
+    background-color:;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+h4 {
+    width: 18%; 
+    font-size: 13px;
+    text-align: center;
+}
+
+.world-statistic {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 3px;
+}
+
+#global_recovery {
+    color: wheat;
+    text-align: center;
+    font-size: 13px;
+}
+
+#total_death {
+    color: wheat;
+    text-align: center;
+    font-size: 13px;
+}
+
+#total_cases {
+    color: wheat;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#sick_today {
+    color: wheat;
+    text-align: center;
+    font-size: 15px;
+}
+
+#deaths_today {
+    color: wheat;
+    text-align: center;
+    font-size: 13px;
+}
+
+#countries_stat {
+    /* margin-top: 237px; */
+    margin-top: 6px;
+    max-width: 200px;
+    position: absolute;
+    border-collapse: unset;
+    text-align: center;
+    color: white;
+    font-weight: 200;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+th {
+    padding: 2px 0;
+    border: none;
+    border-spacing: 0;
+    background-color: brown;
+    border: 1px solid white;
+    position: sticky;
+    top: 0px;
+    font-size: 14px;
+}
+
+
+tr:first-child {
+    background-color: #37474f;
+    color: #fafafa;
+}
