@@ -1,0 +1,39 @@
+#graph-canvas {
+	background-color: rgb(59, 59, 59);
+  position: relative;
+}
+
+.graph-content {
+	padding-top: 0.7rem;
+  position: relative;
+}
+.graph-btn {
+  position: absolute;
+  width: 90px;
+  height: 28px;
+  color: #7a7777;
+  background-color: #090909;
+}
+
+#graph-btn0,
+#graph-btn1,
+#graph-btn3 {
+  padding-left: 23px;
+}
+
+#graph-btn0 {
+  left: 0px;
+  color: #7a7777;
+}
+#graph-btn1 {
+  left: 6.5rem;
+}
+
+#graph-btn2 {
+  padding-left: 12px;
+  left: 13rem;
+}
+
+#graph-btn3 {
+  left: 19.6rem;
+}
