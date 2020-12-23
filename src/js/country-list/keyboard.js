@@ -19,7 +19,7 @@ const Keyboard = {
         "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
         "shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "done", 'lang',
-        "space", "left", "right", 'volume', 'micro'
+        "space", "", "", '', ''
     ],
 
     start() {
@@ -59,6 +59,7 @@ const Keyboard = {
                         const end = this.input.selectionEnd;
                         if (start > 0) {
                             this.input.setRangeText('', start - 1, end, 'end');
+                            this.input.dispatchEvent(new Event('input'));
                         }
                         this.input.focus()
                     })
@@ -69,7 +70,6 @@ const Keyboard = {
                     keyElement.dataset.enter = true;
                     keyElement.addEventListener('click', () => {
                         this.input.value += '\n';
-                        this.input.dispatchEvent(new Event('input'));
                         this.input.focus();
                     })
                     break;
@@ -86,7 +86,7 @@ const Keyboard = {
                     keyElement.dataset.space = true;
                     keyElement.addEventListener('click', () => {
                         this.input.value += ' ';
-
+                        this.input.dispatchEvent(new Event('input'));
                         this.input.focus();
                     })
                     break;
