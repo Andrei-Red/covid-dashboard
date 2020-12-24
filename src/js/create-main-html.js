@@ -40,6 +40,7 @@ export const createHTML = {
 
     const createGraphContent = () => {
       this.createElementHTML('div', 'graph-content', '.tableGrapg-content');
+      this.createElementHTML('canvas', 'graph-area', '.graph-content', 'graph-canvas');
     };
 
     createMain();
