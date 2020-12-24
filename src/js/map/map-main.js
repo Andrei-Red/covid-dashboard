@@ -20,6 +20,7 @@ const createMap = {
         createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn1');
         createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn2');
         createHTML.createElementHTML('div', 'map-btn', mapContentElement, 'btn3');
+        createHTML.createElementHTML('div', 'btn-map-expansion', mapContentElement, 'expansion-map');
 
         const buttonOne = document.getElementById('btn1');
         buttonOne.innerHTML = `<p>Active</p>`;
@@ -306,7 +307,6 @@ const createMap = {
         fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_ocean.geojson').then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
-                    console.log(data)
                     L.geoJson(data, {
                         style: function (feature) {
                             return {
@@ -323,6 +323,15 @@ const createMap = {
                 console.log("Response status" + response.status + ': ' + response.statusText);
             }
         })
+    }, 
+
+    expansionContent() {
+        const buttonExpansion = document.getElementById('expansion-map');
+        const divMapContent = document.querySelector('.map-content')
+        buttonExpansion.addEventListener('click', () => {
+            console.log('click')
+            divMapContent.classList.toggle('expansion');
+        })    
     }
 }
 
@@ -330,4 +339,5 @@ const createMap = {
 export default function createMapInApp() {
     createMap.createButtonForMap();
     createMap.createDivElementForMapAndAddMap();
+    createMap.expansionContent();
 }

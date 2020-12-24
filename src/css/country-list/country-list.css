@@ -31,6 +31,7 @@ select {
   cursor: pointer;
   transition: all 0.2s;
   position: absolute;
+  border-radius: 50%;
   top: -4px;
   right: -4px;
 }
