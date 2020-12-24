@@ -153,8 +153,28 @@ const chart = new Chart(ctx, chartConfig);
 }
 }
 
+function expansionContentGr() {
+    
+    const grDiv = document.querySelector('.graph-content')
+    createHTML.createElementHTML('div', 'btn-gr-expansion', grDiv, 'expansion-gr')
+    const btnTable1 = document.querySelector('.btn-gr-expansion')
+    const btnTable = document.querySelector('.map-content')
+    const btnGr = document.querySelector('.btn-gr-expansion')
+   //const countriesStat = document.getElementById('countries_stat')
+
+    btnGr.addEventListener('click', () => {
+    
+        grDiv.classList.toggle('expansion-gr');
+        btnTable.classList.toggle('none');
+        //btnTable1.classList.toggle('z-ind');
+ 
+    })    
+}
+
+
 
 export default function createGraphInApp() {
     createGraph.createGraphArea();
     createGraph.createButtonForGraph();
+    expansionContentGr()
 }

@@ -45,7 +45,6 @@ const createTable = {
         }
     })
         .then(response => response.json().then( data => {
-        console.log(data);
         total_cases.innerHTML = data.total_cases;
         total_death.innerHTML = data.total_deaths;
         total_recovered.innerHTML = data.total_recovered;
@@ -85,11 +84,10 @@ createTableContent() {
     }
 })
     .then(response => response.json().then(data =>{
-        console.log(data)
+
         let countries_stat = data.countries_stat;
 
         for(let i = 0; i<countries_stat.length;i++){
-            console.log(countries_stat[i]);
 
         let row = table.insertRow(i+1);
         let country_name = row.insertCell(0);
@@ -106,6 +104,9 @@ createTableContent() {
         new_deaths.innerHTML = countries_stat[i].new_deaths;
 
     }
+
+
+
 }))
 .catch(err => {
     console.log(err);
@@ -113,7 +114,40 @@ createTableContent() {
     }
 }
 
+function expansionContentTab() {
+    
+    const tabDiv = document.querySelector('.table-content')
+    createHTML.createElementHTML('div', 'btn-tab-expansion', tabDiv, 'expansion-tab')
+    const btnTable2 = document.querySelector('.btn-tab-expansion')
+  
+
+    const btnTable = document.querySelector('.map-content')
+    const btnGr = document.querySelector('.btn-gr-expansion')
+    const countriesStat = document.getElementById('countries_stat')
+
+   btnTable2.addEventListener('click', () => {
+    
+        tabDiv.classList.toggle('expansion-tab');
+        btnTable.classList.toggle('none');
+        btnTable.classList.toggle('z-ind');
+       
+        countriesStat.classList.toggle('table-center');
+    })    
+}
+
+
 export default function createTableInApp() {
     createTable.createBoxes();
     createTable.createTableContent();
+    expansionContentTab()
 }
+
+
+
+//countries_stat
+//const infoTable = document.querySelector('.info')
+
+
+
+
+

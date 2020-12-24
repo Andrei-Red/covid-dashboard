@@ -12,7 +12,7 @@ body{
     width: 100%;
     height: 100hv;
     
-    background: #6e8681;
+    background: #202020;
 }
 
 .wrapper {
@@ -26,7 +26,13 @@ body{
 
 header.wrapper {
     height: 3.5rem;
-    background-color: #210f0f73;
+    background-color:#3b3b3b;
+}
+
+.logo {
+    font-size: 2rem;
+    color:#e4dede;
+    margin: auto;
 }
 
 /* ========== MAIN ==========  */
@@ -45,7 +51,7 @@ main.wrapper {
 }
 
 .map-content {
-    background-color: #922b703b;
+    background-color: #3e1212;
     width: 49%;
     height: 100%;
 }
@@ -62,11 +68,32 @@ main.wrapper {
 }
 
 .graph-content {
-    background-color:#922b703b;
+    background-color:#3e1212;
     width: 100%;
     height: 40%;
 }
 
+/* =========== FOOTER =========== */
+footer {
+    color: seashell;
+}
+
+footer.wrapper {
+    display: flex;
+    background-color: #3b3b3b;
+    margin-top: 10px;
+    align-content: space-between;
+    justify-content: space-around;
+}
+
+.card-foo {
+    margin: 20px;
+    
+}
+
+.imgRS {
+    width: 110px;
+}
 
 
 @media (max-width: 800px) {

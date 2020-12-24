@@ -52,11 +52,14 @@ h4 {
     font-size: 13px;
 }
 
+.table-content {
+    overflow-y: auto;
+    position: relative;
+}
+
 #countries_stat  {
-    /* margin-top: 237px; */
     margin-top: 6px;
     max-width: 200px;
-    position: absolute;
     border-collapse: unset;
     text-align: center;
     color: white;
@@ -64,6 +67,8 @@ h4 {
     height: 200px;
     overflow-y: auto;
 }
+
+/*   */
 
 th {
     padding: 2px 0;
