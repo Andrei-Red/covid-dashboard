@@ -63,7 +63,7 @@ export default class List {
     renderFull() {
         const fullBtn = document.createElement('img');
         fullBtn.onload = () => this.controlPanel.appendChild(fullBtn);
-        fullBtn.src = './assets/fullscreen.png';
+        fullBtn.src = './assets/fullscreen1.jpg';
         fullBtn.onclick = () => {
             if (this.list.classList.contains('list-content-full')) {
                 this.list.classList.remove('list-content-full')
