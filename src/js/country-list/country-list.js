@@ -35,7 +35,7 @@ export default class List {
 
     searchInfo(request) {
         this.dataToShow = this.data.filter((country) => country
-            .country.substr(0, request.length).toLowerCase() === request);
+            .country.substr(0, request.length).toLowerCase() === request.toLowerCase());
     }
 
     renderListPanel() {
