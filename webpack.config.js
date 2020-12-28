@@ -9,25 +9,36 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, '/dist/'),
-        filename: '[name].bundle.js'
+        filename: '[name].bundle.js',
       },
-/*     module: {
+    module: {
       rules: [
         {
           test: /\.css$/,
-          //use: MiniCssExtractPlugin('style-loader', 'css-loader')
-          use: MiniCssExtractPlugin.loader('style-loader', 'css-loader')
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
+        },
+        {
+          test: /\.(png|jpg)$/,
+          loader: 'url-loader'
+        },
+        {
+          test: /\.(?:|png|jpg|svg|jpeg)$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              name: `./assets/[name].[ext]`
+            }
+          }]
+          
         }
       ]
-    }, */  
+    },  
     plugins: [
         new HtmlWebpackPlugin({
             template: 'src/index.html'
           }),
         new MiniCssExtractPlugin({
-            filename: 'bundle.css'
+            filename: `./css/[name].bundle.css`
           }),
-    ],
-    
+    ],    
 }
-

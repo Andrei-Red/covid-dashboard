@@ -116,6 +116,13 @@ export const createHTML = {
 
     createFooter();
     createCardFoo();
+  },
+
+  createDivForKeyBr() {
+    this.createElementHTML('div', 'keyboard', 'body');
+    const divForKeyBr = this.getHTMLElementByQuerySelector('.keyboard')
+    divForKeyBr.classList.add('keyboard__hidden')
+    this.createElementHTML('div', 'keyboard__buttons', divForKeyBr);
   }
 };
 
@@ -123,4 +130,5 @@ export default function startCreteHTML() {
   createHTML.createHeaderHtml();
   createHTML.createMainHtml();
   createHTML.createFooterHtml();
+  createHTML.createDivForKeyBr();
 }
