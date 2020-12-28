@@ -1,3 +1,10 @@
+import './css/country-list/keyboard.css';
+import './style.css';
+import './css/table/table.css';
+import './css/country-list/country-list.css';
+import './css/graph/graph.css';
+import './css/map/map.css';
+
 import startCreteHTML from './js/create-main-html.js';
 import createMapInApp from './js/map/map-main.js';
 import createTableInApp from './js/table/table.js';
